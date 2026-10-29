@@ -17,7 +17,7 @@ import { SettingRow } from "../components/settings/SettingsLayout.js";
 import { usePluginAdmins } from "./plugin-context.js";
 
 /** A General Settings field a plugin can take over. */
-export type GeneralSettingsFieldName = "title" | "tagline" | "social";
+export type GeneralSettingsFieldName = "title" | "tagline" | "logo" | "favicon" | "social";
 
 export interface GeneralSettingsFieldsExtension {
 	/** The fields to hide. */
