@@ -11,6 +11,7 @@ import * as React from "react";
 import { createContext, useContext } from "react";
 
 import type { NestedFieldEditorExtension } from "../components/NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
+import type { BlocksFieldExtension } from "./blocks-field.js"; // emdash-suite hook: blocks-field
 import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
@@ -32,6 +33,8 @@ export interface PluginAdminModule {
 	sidebarLayout?: SidebarLayoutExtension;
 	/** Can't be disabled in the Plugin Manager. emdash-suite hook: required-plugin */
 	requiredPlugin?: RequiredPluginExtension;
+	/** Shapes how blocks fields (sections) and their repeater items behave. emdash-suite hook: blocks-field */
+	blocksField?: BlocksFieldExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */
