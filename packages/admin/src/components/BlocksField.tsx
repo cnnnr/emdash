@@ -30,6 +30,7 @@ import {
 	updateBlockFieldValue,
 } from "../lib/block-field-state.js";
 import { cn } from "../lib/utils.js";
+import { useSectionFieldRenderer } from "./NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 
 interface NestedFieldDescriptor {
 	id?: string;
@@ -319,6 +320,7 @@ function BlockCard({
 	const unsupported = !blockType || !version || Boolean(version.unsupportedTypes?.length);
 	const inactive = Boolean(blockType && block._version !== blockType.currentVersion);
 	const blockSummary = version ? summary(block, version.fields) : null;
+	renderField = useSectionFieldRenderer(renderField, block._type, version?.fields, readOnly); // emdash-suite hook: nested-field-editors
 
 	return (
 		<section
