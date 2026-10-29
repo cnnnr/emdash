@@ -51,6 +51,7 @@ import { fromDatetimeLocalInputValue, toDatetimeLocalInputValue } from "../lib/d
 import { getEntryTitle } from "../lib/entryTitle.js";
 import { getFieldLabel } from "../lib/field-label.js";
 import { formatFileSize, getFileIcon, localMediaFileUrl } from "../lib/media-utils";
+import { useFieldWrappers, wrapField } from "../lib/field-wrapper.js"; // emdash-suite hook: field-wrapper
 import { usePluginAdmins } from "../lib/plugin-context.js";
 import {
 	resolveSandboxedEditorActions,
@@ -541,6 +542,7 @@ export function ContentEditor({
 		() => item?.data ?? (isNew ? defaultFieldValues(fields) : {}),
 	);
 	const editorGenerationRef = React.useRef(0);
+	const fieldWrappers = useFieldWrappers(collection); // emdash-suite hook: field-wrapper
 	const editorIdentity = `${collection}:${item?.id ?? "new"}:${item?.locale ?? entryLocale ?? ""}`;
 	const [editorDraftError, setEditorDraftError] = React.useState<string | null>(null);
 	const [hasAppliedEditorDraftPatch, setHasAppliedEditorDraftPatch] = React.useState(false);
@@ -1808,6 +1810,11 @@ export function ContentEditor({
 												entryLocale={item?.locale ?? entryLocale}
 											/>
 										);
+										// emdash-suite hook: field-wrapper
+										if (!isDocumentBody) {
+											const ctx = { collection, name, field, values: formData, onChange: handleFieldChange };
+											return wrapField(fieldWrappers, ctx, fieldEl, fieldKey);
+										}
 										return fieldEl;
 									})}
 								</div>

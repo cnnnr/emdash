@@ -14,6 +14,7 @@ import type { NestedFieldEditorExtension } from "../components/NestedFieldEditor
 import type { BlocksFieldExtension } from "./blocks-field.js"; // emdash-suite hook: blocks-field
 import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
+import type { FieldWrapperExtension } from "./field-wrapper.js"; // emdash-suite hook: field-wrapper
 import type { GeneralSettingsFieldsExtension } from "./general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
 import type { SidebarLayoutExtension } from "./sidebar-layout.js"; // emdash-suite hook: sidebar-layout
@@ -38,6 +39,8 @@ export interface PluginAdminModule {
 	blocksField?: BlocksFieldExtension;
 	/** Takes over named fields of General Settings. emdash-suite hook: general-settings-fields */
 	generalSettingsFields?: readonly GeneralSettingsFieldsExtension[];
+	/** Wraps each field of the content editor. emdash-suite hook: field-wrapper */
+	fieldWrappers?: readonly FieldWrapperExtension[];
 }
 
 /** All plugin admin modules keyed by plugin ID */
