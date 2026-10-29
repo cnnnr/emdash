@@ -83,7 +83,18 @@ function ArrangedContent({
 
 	function section(s: SidebarArrangedSection, index: number) {
 		return (
-			<KumoSidebar.Group key={s.key} className={index === 0 ? "mt-2 md:mt-1.5" : undefined}>
+			<KumoSidebar.Group
+				key={s.key}
+				className={
+					index === 0
+						? "mt-2 md:mt-1.5"
+						: // A top-level folder has no group label, so a line keeps it from reading as part of
+							// the group above it.
+							s.collapsible
+							? "mt-2 border-t border-kumo-line pt-2"
+							: undefined
+				}
+			>
 				{s.label && !s.collapsible && <KumoSidebar.GroupLabel>{s.label}</KumoSidebar.GroupLabel>}
 				<KumoSidebar.Menu>
 					{s.collapsible
