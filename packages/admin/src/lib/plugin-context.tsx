@@ -13,6 +13,7 @@ import { createContext, useContext } from "react";
 import type { NestedFieldEditorExtension } from "../components/NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
+import type { SidebarLayoutExtension } from "./sidebar-layout.js"; // emdash-suite hook: sidebar-layout
 
 /** Shape of a plugin's admin exports */
 export interface PluginAdminModule {
@@ -26,6 +27,8 @@ export interface PluginAdminModule {
 	editorExtensions?: readonly AnyExtension[];
 	/** Editors a plugin picks for fields in sections and repeater items. emdash-suite hook: nested-field-editors */
 	nestedFieldEditors?: readonly NestedFieldEditorExtension[];
+	/** Arranges the sidebar: order, groups, nesting, renames, hidden items. emdash-suite hook: sidebar-layout */
+	sidebarLayout?: SidebarLayoutExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */
