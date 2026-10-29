@@ -24,6 +24,7 @@ import { fromDatetimeLocalInputValue, toDatetimeLocalInputValue } from "../lib/d
 import { cn } from "../lib/utils.js";
 import { CaretNext } from "./ArrowIcons.js";
 import { ImageFieldRenderer, type ImageFieldValue } from "./ImageFieldRenderer.js";
+import { useRepeaterFieldEditor } from "./NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 
 interface RepeaterSubFieldDef {
 	slug: string;
@@ -316,6 +317,15 @@ interface SubFieldInputProps {
 
 function SubFieldInput({ id, subField, value, onChange, timezone }: SubFieldInputProps) {
 	const { t } = useLingui();
+	// emdash-suite hook: nested-field-editors
+	const pluginEditor = useRepeaterFieldEditor(subField, {
+		id,
+		label: subField.label,
+		required: subField.required,
+		value,
+		onChange,
+	});
+	if (pluginEditor) return pluginEditor;
 	switch (subField.type) {
 		case "string":
 			return (

@@ -10,6 +10,7 @@ import type { AnyExtension } from "@tiptap/core"; // emdash-suite hook: editor-e
 import * as React from "react";
 import { createContext, useContext } from "react";
 
+import type { NestedFieldEditorExtension } from "../components/NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
 
@@ -23,6 +24,8 @@ export interface PluginAdminModule {
 	contentListColumns?: readonly ContentListColumnExtension[];
 	/** TipTap extensions a plugin adds to the rich text editor. emdash-suite hook: editor-extensions */
 	editorExtensions?: readonly AnyExtension[];
+	/** Editors a plugin picks for fields in sections and repeater items. emdash-suite hook: nested-field-editors */
+	nestedFieldEditors?: readonly NestedFieldEditorExtension[];
 }
 
 /** All plugin admin modules keyed by plugin ID */
