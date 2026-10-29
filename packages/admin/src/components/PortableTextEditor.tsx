@@ -143,6 +143,7 @@ import {
 	assertProseMirrorMarksSupported,
 	findUnsupportedPortableTextMarks,
 } from "../lib/portable-text-marks.js";
+import { usePluginAdmins } from "../lib/plugin-context"; // emdash-suite hook: editor-extensions
 import { cn } from "../lib/utils";
 import {
 	TABLE_CELL_MIN_WIDTH,
@@ -3828,6 +3829,9 @@ export function PortableTextEditor({
 		}
 	}, []);
 
+	// emdash-suite hook: editor-extensions
+	const pluginEditorExtensions = Object.values(usePluginAdmins()).flatMap((a) => a.editorExtensions ?? []);
+
 	// Memoize the entire extensions array so TipTap never diffs/replaces
 	// plugins on re-render. The loop was: extension array changes → useEditor
 	// calls setOptions → old Suggestion plugin destroyed → onExit fires
@@ -3932,6 +3936,7 @@ export function PortableTextEditor({
 				mode: "all",
 			}),
 			Typography,
+			...pluginEditorExtensions, // emdash-suite hook: editor-extensions
 		],
 		[], // Created once — all mutable state accessed via refs
 	);

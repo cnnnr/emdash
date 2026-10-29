@@ -6,6 +6,7 @@
  * everything in React's component tree.
  */
 
+import type { AnyExtension } from "@tiptap/core"; // emdash-suite hook: editor-extensions
 import * as React from "react";
 import { createContext, useContext } from "react";
 
@@ -20,6 +21,8 @@ export interface PluginAdminModule {
 	contentEditorPanels?: readonly ContentEditorPanelExtension[];
 	/** Columns contributed to active content collection lists by a trusted plugin. */
 	contentListColumns?: readonly ContentListColumnExtension[];
+	/** TipTap extensions a plugin adds to the rich text editor. emdash-suite hook: editor-extensions */
+	editorExtensions?: readonly AnyExtension[];
 }
 
 /** All plugin admin modules keyed by plugin ID */
