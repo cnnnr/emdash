@@ -19,6 +19,7 @@ import * as React from "react";
 
 import { fetchManifest } from "../lib/api";
 import { useCurrentUser } from "../lib/api/current-user.js";
+import { HideTakenOverSettingsLinks } from "../lib/general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import { SUPPORTED_LOCALES } from "../locales/index.js";
 import { useLocale } from "../locales/useLocale.js";
 import { SettingsNavRow, SettingsSection } from "./settings/SettingsLayout.js";
@@ -46,6 +47,7 @@ export function Settings() {
 				<h1 className="text-2xl font-semibold leading-tight text-balance">{t`Settings`}</h1>
 			</header>
 
+			<HideTakenOverSettingsLinks /> {/* emdash-suite hook: general-settings-fields */}
 			<div className="mt-6 grid gap-8">
 				<SettingsSection title={t`Site`}>
 					<SettingsNavRow
