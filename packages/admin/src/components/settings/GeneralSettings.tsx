@@ -70,6 +70,8 @@ export function GeneralSettings() {
 	const toastManager = useKumoToastManager();
 	const titleClass = useTakenOverClass("title"); // emdash-suite hook: general-settings-fields
 	const taglineClass = useTakenOverClass("tagline"); // emdash-suite hook: general-settings-fields
+	const logoClass = useTakenOverClass("logo"); // emdash-suite hook: general-settings-fields
+	const faviconClass = useTakenOverClass("favicon"); // emdash-suite hook: general-settings-fields
 
 	const {
 		data: settings,
@@ -361,7 +363,7 @@ export function GeneralSettings() {
 						)}
 					</SettingRow>
 
-					<SettingRow>
+					<SettingRow className={logoClass}>
 						<div className="grid gap-4 sm:grid-cols-2 sm:items-center">
 							<div className="text-base font-medium">{t`Logo`}</div>
 							<div className="min-w-0">
@@ -421,7 +423,7 @@ export function GeneralSettings() {
 						</div>
 					</SettingRow>
 
-					<SettingRow>
+					<SettingRow className={faviconClass}>
 						<div className="grid gap-4 sm:grid-cols-2 sm:items-center">
 							<div className="text-base font-medium">{t`Favicon`}</div>
 							<div className="min-w-0">
