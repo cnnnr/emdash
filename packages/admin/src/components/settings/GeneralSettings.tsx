@@ -25,6 +25,7 @@ import {
 	type SiteSettings,
 	type SiteSettingsUpdate,
 } from "../../lib/api";
+import { GeneralSettingsTakeover, useTakenOverClass } from "../../lib/general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import { useDateLocale } from "../../locales/date-locale.js";
 import { ConfirmDialog } from "../ConfirmDialog.js";
 import { MediaPickerModal } from "../MediaPickerModal";
@@ -67,6 +68,8 @@ export function GeneralSettings() {
 	const { t } = useLingui();
 	const queryClient = useQueryClient();
 	const toastManager = useKumoToastManager();
+	const titleClass = useTakenOverClass("title"); // emdash-suite hook: general-settings-fields
+	const taglineClass = useTakenOverClass("tagline"); // emdash-suite hook: general-settings-fields
 
 	const {
 		data: settings,
@@ -273,7 +276,8 @@ export function GeneralSettings() {
 		>
 			<form id="general-settings-form" onSubmit={handleSubmit} className="grid gap-8">
 				<SettingsSection title={t`Site Identity`}>
-					<SettingRow>
+					<GeneralSettingsTakeover /> {/* emdash-suite hook: general-settings-fields */}
+					<SettingRow className={titleClass}>
 						<Input
 							label={t`Site Title`}
 							value={formData.title ?? ""}
@@ -281,7 +285,7 @@ export function GeneralSettings() {
 							description={t`The name of your site, used in the header and metadata`}
 						/>
 					</SettingRow>
-					<SettingRow>
+					<SettingRow className={taglineClass}>
 						<Input
 							label={t`Tagline`}
 							value={formData.tagline ?? ""}
