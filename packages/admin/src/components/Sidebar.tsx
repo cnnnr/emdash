@@ -32,10 +32,12 @@ import {
 	toPhosphorIconName,
 } from "./admin-navigation-icons.js";
 import { BrandIcon } from "./Logo.js";
+import { SidebarLayoutContent } from "./SidebarLayout.js"; // emdash-suite hook: sidebar-layout
 
 // Re-export for Shell.tsx and Header.tsx
 export { KumoSidebar as Sidebar, useSidebar };
 export { resolveNavIcon, toPhosphorIconName };
+export { NavMenuLink }; // emdash-suite hook: sidebar-layout
 
 // Role levels (matching @emdash-cms/auth)
 const ROLE_ADMIN = 50;
@@ -644,6 +646,18 @@ export function SidebarNav({ manifest }: SidebarNavProps) {
 		});
 	}
 
+	// emdash-suite hook: sidebar-layout
+	const layoutItems: NavItem[] = [
+		{ to: "/", label: t`Dashboard`, icon: ADMIN_NAV_ICONS.dashboard },
+		...(userRole >= ROLE_CONTRIBUTOR
+			? [{ to: "/calendar", label: t`Calendar`, icon: ADMIN_NAV_ICONS.calendar }]
+			: []),
+		...filterNavItemsByRole(contentItems, userRole).filter((i) => i.to !== "/"),
+		...visibleManage,
+		...visibleAdmin,
+		...filterNavItemsByRole(pluginItems, userRole),
+	];
+
 	return (
 		<KumoSidebar className="emdash-sidebar" aria-label={t`Admin navigation`}>
 			<KumoSidebar.Header className="px-[11px] transition-[padding] duration-(--sidebar-animation-duration) motion-reduce:transition-none group-not-data-[state=collapsed]/sidebar:px-3.5">
@@ -667,7 +681,7 @@ export function SidebarNav({ manifest }: SidebarNavProps) {
 				</Link>
 			</KumoSidebar.Header>
 
-			<KumoSidebar.Content>
+			<SidebarLayoutContent items={layoutItems} role={userRole}>
 				{/* Dashboard — standalone */}
 				<KumoSidebar.Group className="mt-2 md:mt-1.5">
 					<KumoSidebar.Menu>
@@ -715,7 +729,7 @@ export function SidebarNav({ manifest }: SidebarNavProps) {
 						<KumoSidebar.Menu>{renderNavEntries(visiblePlugins)}</KumoSidebar.Menu>
 					</KumoSidebar.Group>
 				)}
-			</KumoSidebar.Content>
+			</SidebarLayoutContent>
 
 			<KumoSidebar.Footer className="gap-0">
 				<KumoSidebar.Trigger className="rtl:rotate-180" />
