@@ -29,6 +29,8 @@ import {
 	type StoredBlockValue,
 	updateBlockFieldValue,
 } from "../lib/block-field-state.js";
+import { useBlockRenderField, useBlocksField, useSummaryBlock } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
+import { useBlockCard } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
 import { cn } from "../lib/utils.js";
 import { useSectionFieldRenderer } from "./NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 
@@ -129,6 +131,7 @@ export function BlocksField({
 	const [pickerOpen, setPickerOpen] = React.useState(false);
 	const [query, setQuery] = React.useState("");
 	const [collapsed, setCollapsed] = React.useState<Set<string>>(() => new Set());
+	const { headerActions } = useBlocksField({ fieldPath, blocks, collapsed, setCollapsed }); // emdash-suite hook: blocks-field
 	const typeBySlug = React.useMemo(
 		() => new Map(blockTypes.map((blockType) => [blockType.slug, blockType])),
 		[blockTypes],
@@ -166,6 +169,7 @@ export function BlocksField({
 		<div id={id} className="grid grid-cols-[minmax(0,1fr)] gap-3">
 			<div className="flex items-center justify-between gap-3">
 				<Label>{label}</Label>
+				{headerActions /* emdash-suite hook: blocks-field */}
 				{!readOnly && (
 					<Button
 						variant="outline"
@@ -319,8 +323,13 @@ function BlockCard({
 	const version = blockType?.versions.find((candidate) => candidate.version === block._version);
 	const unsupported = !blockType || !version || Boolean(version.unsupportedTypes?.length);
 	const inactive = Boolean(blockType && block._version !== blockType.currentVersion);
+	const realBlock = block; // emdash-suite hook: blocks-field (plugins rewrite only the summary text)
+	block = useSummaryBlock(block, version?.fields, fieldPath); // emdash-suite hook: blocks-field
 	const blockSummary = version ? summary(block, version.fields) : null;
+	block = realBlock; // emdash-suite hook: blocks-field
+	const blocksCard = useBlockCard(block, fieldPath); // emdash-suite hook: blocks-field
 	renderField = useSectionFieldRenderer(renderField, block._type, version?.fields, readOnly); // emdash-suite hook: nested-field-editors
+	renderField = useBlockRenderField(renderField, block._type); // emdash-suite hook: blocks-field
 
 	return (
 		<section
@@ -331,6 +340,7 @@ function BlockCard({
 				isDragging && "opacity-50",
 			)}
 			data-block-key={block._key}
+			{...blocksCard.sectionProps} // emdash-suite hook: blocks-field
 		>
 			<div className="flex items-center gap-2 p-3">
 				{!readOnly && (
@@ -414,6 +424,7 @@ function BlockCard({
 							}),
 						)
 					)}
+					{blocksCard.footer /* emdash-suite hook: blocks-field */}
 					<span className="sr-only">{t`Block ${index + 1}`}</span>
 				</div>
 			)}

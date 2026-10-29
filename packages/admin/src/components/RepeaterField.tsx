@@ -20,6 +20,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Plus, Trash, DotsSixVertical, CaretDown } from "@phosphor-icons/react";
 import * as React from "react";
 
+import { useRepeaterStartCollapsed } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
 import { fromDatetimeLocalInputValue, toDatetimeLocalInputValue } from "../lib/datetime-local.js";
 import { cn } from "../lib/utils.js";
 import { CaretNext } from "./ArrowIcons.js";
@@ -73,6 +74,7 @@ export function RepeaterField({
 	const rawItems = Array.isArray(value) ? value : [];
 	const [items, setItems] = React.useState<RepeaterItem[]>(() => ensureKeys(rawItems));
 	const [collapsedItems, setCollapsedItems] = React.useState<Set<string>>(new Set());
+	useRepeaterStartCollapsed(items, setCollapsedItems); // emdash-suite hook: blocks-field
 
 	// Sync from external value changes.
 	// Preserve each item's _key by position so round-trips through onChange
