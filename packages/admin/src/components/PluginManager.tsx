@@ -53,6 +53,11 @@ import {
 	type RegistryUpdateOpts,
 	type RegistryRecordVerificationSummary,
 } from "../lib/api/registry.js";
+import {
+	RequiredPluginNote,
+	requiredSwitchProps,
+	useRequiredPlugin,
+} from "../lib/required-plugin.js"; // emdash-suite hook: required-plugin
 import { safeIconUrl } from "../lib/url.js";
 import { cn, formatDate } from "../lib/utils.js";
 import { ADMIN_NAV_ICONS } from "./admin-navigation-icons.js";
@@ -404,6 +409,8 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 		},
 	});
 
+	const required = useRequiredPlugin(plugin.id); // emdash-suite hook: required-plugin
+
 	const handleToggle = () => {
 		if (plugin.enabled) {
 			onDisable();
@@ -457,6 +464,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 								</Badge>
 							)}
 						</div>
+						<RequiredPluginNote required={required} /> {/* emdash-suite hook: required-plugin */}
 						{registryIdentity && (
 							<RegistryPluginIdentity
 								identity={registryIdentity}
@@ -556,6 +564,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 							onCheckedChange={handleToggle}
 							disabled={isToggling}
 							aria-label={plugin.enabled ? t`Disable plugin` : t`Enable plugin`}
+							{...requiredSwitchProps(required)} // emdash-suite hook: required-plugin
 						/>
 
 						<Button
