@@ -11,6 +11,11 @@ import { useCurrentUser } from "../lib/api/current-user.js";
 import type { CollectionStats, DashboardStats, RecentItem } from "../lib/api/dashboard";
 import { dismissScheduledPolicyRejection, fetchDashboardStats } from "../lib/api/dashboard";
 import { fetchTransferCapabilities, TRANSFER_CAPABILITIES_QUERY_KEY } from "../lib/api/transfer.js";
+import {
+	DashboardWidgetCard,
+	DashboardWidgetGrid,
+	useDashboardWidgetLayout,
+} from "../lib/dashboard-widgets.js"; // emdash-suite hook: dashboard-widgets
 import { usePluginWidget } from "../lib/plugin-context";
 import { cn, formatRelativeTime } from "../lib/utils.js";
 import { ArrowNext } from "./ArrowIcons";
@@ -636,6 +641,7 @@ function StatusDot({ status }: { status: string }) {
 // --- Plugin widgets ---
 
 function PluginWidgets({ manifest }: { manifest: AdminManifest }) {
+	const layout = useDashboardWidgetLayout(); // emdash-suite hook: dashboard-widgets
 	const widgets: Array<{
 		id: string;
 		pluginId: string;
@@ -648,6 +654,7 @@ function PluginWidgets({ manifest }: { manifest: AdminManifest }) {
 
 		if ("dashboardWidgets" in plugin && Array.isArray(plugin.dashboardWidgets)) {
 			for (const widget of plugin.dashboardWidgets) {
+				if (!layout.isVisible(pluginId, widget.id)) continue; // emdash-suite hook: dashboard-widgets
 				widgets.push({
 					id: widget.id,
 					pluginId,
@@ -660,6 +667,16 @@ function PluginWidgets({ manifest }: { manifest: AdminManifest }) {
 
 	if (widgets.length === 0) {
 		return null;
+	}
+
+	// emdash-suite hook: dashboard-widgets
+	if (layout.isHooked(widgets)) {
+		return (
+			<DashboardWidgetGrid
+				widgets={widgets}
+				card={(widget) => <PluginWidgetCard widget={widget} />}
+			/>
+		);
 	}
 
 	return (
@@ -683,6 +700,20 @@ function PluginWidgetCard({
 		widget.id,
 		declaredLabelTranslator(i18n, (id) => i18n._(id)),
 	);
+	const extension = useDashboardWidgetLayout().extensionOf(widget.pluginId, widget.id); // emdash-suite hook: dashboard-widgets
+
+	// emdash-suite hook: dashboard-widgets
+	if (extension) {
+		return (
+			<DashboardWidgetCard extension={extension} title={title}>
+				{WidgetComponent ? (
+					<WidgetComponent />
+				) : (
+					<SandboxedPluginWidget pluginId={widget.pluginId} widgetId={widget.id} />
+				)}
+			</DashboardWidgetCard>
+		);
+	}
 
 	return (
 		<LayerCard className="h-full">

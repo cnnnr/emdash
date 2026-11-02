@@ -14,6 +14,7 @@ import type { NestedFieldEditorExtension } from "../components/NestedFieldEditor
 import type { BlocksFieldExtension } from "./blocks-field.js"; // emdash-suite hook: blocks-field
 import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
+import type { DashboardWidgetExtension } from "./dashboard-widgets.js"; // emdash-suite hook: dashboard-widgets
 import type { FieldWrapperExtension } from "./field-wrapper.js"; // emdash-suite hook: field-wrapper
 import type { GeneralSettingsFieldsExtension } from "./general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
@@ -41,6 +42,8 @@ export interface PluginAdminModule {
 	generalSettingsFields?: readonly GeneralSettingsFieldsExtension[];
 	/** Wraps each field of the content editor. emdash-suite hook: field-wrapper */
 	fieldWrappers?: readonly FieldWrapperExtension[];
+	/** Shapes dashboard cards by widget id: role, size, title bar actions. emdash-suite hook: dashboard-widgets */
+	dashboardWidgets?: Readonly<Record<string, DashboardWidgetExtension>>;
 }
 
 /** All plugin admin modules keyed by plugin ID */
