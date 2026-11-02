@@ -119,7 +119,7 @@ export function DashboardWidgetCard({
 			<LayerCard.Secondary>
 				<h2 className="px-3">{title}</h2>
 				{Actions && (
-					<div className="ml-auto flex items-center gap-2 px-3">
+					<div className="-my-1 ml-auto flex items-center gap-2 px-3">
 						<PluginFieldErrorBoundary fieldKind="dashboard widget">
 							<Actions />
 						</PluginFieldErrorBoundary>
