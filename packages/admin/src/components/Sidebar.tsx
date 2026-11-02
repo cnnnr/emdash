@@ -649,10 +649,12 @@ export function SidebarNav({ manifest }: SidebarNavProps) {
 	// emdash-suite hook: sidebar-layout
 	const layoutItems: NavItem[] = [
 		{ to: "/", label: t`Dashboard`, icon: ADMIN_NAV_ICONS.dashboard },
-		...(userRole >= ROLE_CONTRIBUTOR
+		...(userRole >= ROLE_CONTRIBUTOR && !hiddenNavItems?.includes("calendar")
 			? [{ to: "/calendar", label: t`Calendar`, icon: ADMIN_NAV_ICONS.calendar }]
 			: []),
-		...filterNavItemsByRole(contentItems, userRole).filter((i) => i.to !== "/"),
+		...filterHiddenNavItems(filterNavItemsByRole(contentItems, userRole), hiddenNavItems).filter(
+			(i) => i.to !== "/",
+		),
 		...visibleManage,
 		...visibleAdmin,
 		...filterNavItemsByRole(pluginItems, userRole),
