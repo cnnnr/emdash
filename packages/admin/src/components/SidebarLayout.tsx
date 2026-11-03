@@ -9,7 +9,7 @@ import { Sidebar as KumoSidebar } from "@cloudflare/kumo";
 import { useLocation } from "@tanstack/react-router";
 import * as React from "react";
 
-import { usePluginAdmins } from "../lib/plugin-context";
+import { useEnabledPluginAdmins } from "../lib/enabled-plugin-admins";
 import type {
 	SidebarArrangedSection,
 	SidebarLayoutContext,
@@ -40,7 +40,7 @@ const context = (role: number): SidebarLayoutContext => ({
 
 /** `KumoSidebar.Content`, arranged by a plugin when one provides a layout. */
 export function SidebarLayoutContent({ items, role, children }: SidebarLayoutContentProps) {
-	const admins = usePluginAdmins();
+	const admins = useEnabledPluginAdmins();
 	const layout = Object.values(admins).find((admin) => admin.sidebarLayout)?.sidebarLayout;
 	if (!layout) return <KumoSidebar.Content>{children}</KumoSidebar.Content>;
 	return (

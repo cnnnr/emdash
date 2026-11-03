@@ -14,7 +14,7 @@ import * as React from "react";
 
 import { PluginFieldErrorBoundary } from "../components/PluginFieldErrorBoundary.js";
 import { SettingRow } from "../components/settings/SettingsLayout.js";
-import { usePluginAdmins } from "./plugin-context.js";
+import { useEnabledPluginAdmins } from "./enabled-plugin-admins.js";
 
 /** A General Settings field a plugin can take over. */
 export type GeneralSettingsFieldName = "title" | "tagline" | "logo" | "favicon" | "social";
@@ -27,7 +27,7 @@ export interface GeneralSettingsFieldsExtension {
 }
 
 function useExtensions(): GeneralSettingsFieldsExtension[] {
-	const admins = usePluginAdmins();
+	const admins = useEnabledPluginAdmins();
 	return Object.values(admins).flatMap((admin) => admin.generalSettingsFields ?? []);
 }
 

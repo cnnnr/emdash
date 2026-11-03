@@ -8,7 +8,7 @@
 
 import * as React from "react";
 
-import { usePluginAdmins } from "../lib/plugin-context.js";
+import { useEnabledPluginAdmins } from "../lib/enabled-plugin-admins.js";
 import { PluginFieldErrorBoundary } from "./PluginFieldErrorBoundary.js";
 
 export interface NestedFieldEditorProps {
@@ -46,7 +46,7 @@ export interface NestedFieldEditorExtension {
 const InsideBlockContext = React.createContext<{ blockType: string } | null>(null);
 
 function useExtensions(): readonly NestedFieldEditorExtension[] {
-	return Object.values(usePluginAdmins()).flatMap((admin) => admin.nestedFieldEditors ?? []);
+	return Object.values(useEnabledPluginAdmins()).flatMap((admin) => admin.nestedFieldEditors ?? []);
 }
 
 function pluginEditor(

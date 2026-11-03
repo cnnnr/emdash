@@ -24,7 +24,7 @@
 import * as React from "react";
 
 import { PluginFieldErrorBoundary } from "../components/PluginFieldErrorBoundary.js";
-import { usePluginAdmins } from "./plugin-context.js";
+import { useEnabledPluginAdmins } from "./enabled-plugin-admins.js";
 
 /** Which card a callback is about. */
 export interface BlocksFieldCard {
@@ -88,7 +88,7 @@ export interface BlocksFieldExtension {
 }
 
 function useExtensions(): readonly BlocksFieldExtension[] {
-	return Object.values(usePluginAdmins()).flatMap((admin) =>
+	return Object.values(useEnabledPluginAdmins()).flatMap((admin) =>
 		admin.blocksField ? [admin.blocksField] : [],
 	);
 }

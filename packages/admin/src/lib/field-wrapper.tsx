@@ -13,7 +13,7 @@ import * as React from "react";
 
 import type { FieldDescriptor } from "../components/ContentEditor.js";
 import { PluginFieldErrorBoundary } from "../components/PluginFieldErrorBoundary.js";
-import { usePluginAdmins } from "./plugin-context.js";
+import { useEnabledPluginAdmins } from "./enabled-plugin-admins.js";
 
 export interface FieldWrapperProps {
 	collection: string;
@@ -36,7 +36,7 @@ export interface FieldWrapperExtension {
 
 /** The wrappers that apply to a collection, in plugin order. */
 export function useFieldWrappers(collection: string): FieldWrapperExtension[] {
-	const admins = usePluginAdmins();
+	const admins = useEnabledPluginAdmins();
 	return Object.values(admins)
 		.flatMap((admin) => admin.fieldWrappers ?? [])
 		.filter((wrapper) => !wrapper.collections || wrapper.collections.includes(collection));

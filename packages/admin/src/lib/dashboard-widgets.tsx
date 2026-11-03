@@ -17,7 +17,7 @@ import * as React from "react";
 
 import { PluginFieldErrorBoundary } from "../components/PluginFieldErrorBoundary.js";
 import { useCurrentUser } from "./api/current-user.js";
-import { usePluginAdmins } from "./plugin-context.js";
+import { useEnabledPluginAdmins } from "./enabled-plugin-admins.js";
 
 /** Role levels (matching @emdash-cms/auth), as every admin file that checks roles declares them. */
 const ROLE_CONTRIBUTOR = 20;
@@ -56,7 +56,7 @@ export interface DashboardWidgetRef {
 }
 
 export function useDashboardWidgetLayout() {
-	const admins = usePluginAdmins();
+	const admins = useEnabledPluginAdmins();
 	const { data: user } = useCurrentUser();
 	const role = user?.role ?? 0;
 

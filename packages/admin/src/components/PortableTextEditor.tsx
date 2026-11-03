@@ -143,7 +143,7 @@ import {
 	assertProseMirrorMarksSupported,
 	findUnsupportedPortableTextMarks,
 } from "../lib/portable-text-marks.js";
-import { usePluginAdmins } from "../lib/plugin-context"; // emdash-suite hook: editor-extensions
+import { useEnabledPluginAdmins } from "../lib/enabled-plugin-admins"; // emdash-suite hook: editor-extensions
 import { cn } from "../lib/utils";
 import {
 	TABLE_CELL_MIN_WIDTH,
@@ -3868,7 +3868,7 @@ export function PortableTextEditor({
 	}, []);
 
 	// emdash-suite hook: editor-extensions
-	const pluginEditorExtensions = Object.values(usePluginAdmins()).flatMap((a) => a.editorExtensions ?? []);
+	const pluginEditorExtensions = Object.values(useEnabledPluginAdmins()).flatMap((a) => a.editorExtensions ?? []);
 
 	// Memoize the entire extensions array so TipTap never diffs/replaces
 	// plugins on re-render. The loop was: extension array changes → useEditor
