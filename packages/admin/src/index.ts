@@ -14,6 +14,9 @@ export * from "./lib/api";
 export { EmbedCodeEditor } from "./components/editor/EmbedBlockShell"; // emdash-suite hook: code-editor
 export type { CodeEditorProps, CodeEditorLanguage } from "./components/editor/CodeEditor"; // emdash-suite hook: code-editor
 
+// Plugin admin modules of the enabled plugins only, for plugins that read each other's admin exports. emdash-suite hook: enabled-plugin-admins
+export { useEnabledPluginAdmins } from "./lib/enabled-plugin-admins"; // emdash-suite hook: enabled-plugin-admins
+
 // Utilities
 export { cn } from "./lib/utils";
 
