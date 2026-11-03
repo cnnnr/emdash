@@ -35,6 +35,8 @@ export interface CodeEditorProps {
 	placeholder: string;
 	/** The id of another element that describes the editor, such as an error. */
 	describedBy?: string;
+	/** Extra CodeMirror extensions, such as a linter. Read once, when the editor mounts. emdash-suite hook: code-editor */
+	extensions?: Extension[]; // emdash-suite hook: code-editor
 }
 
 const LANGUAGES: Record<CodeEditorLanguage, () => Extension> = { html, css, javascript };
@@ -90,6 +92,7 @@ export default function CodeEditor({
 	ariaLabel,
 	placeholder: placeholderText,
 	describedBy,
+	extensions: extraExtensions, // emdash-suite hook: code-editor
 	...callbacks
 }: CodeEditorProps) {
 	const { t } = useLingui();
@@ -114,6 +117,7 @@ export default function CodeEditor({
 				EditorView.lineWrapping,
 				placeholder(placeholderText),
 				LANGUAGES[language](),
+				...(extraExtensions ?? []), // emdash-suite hook: code-editor
 				syntaxHighlighting(highlightStyle),
 				theme,
 				Prec.high(
