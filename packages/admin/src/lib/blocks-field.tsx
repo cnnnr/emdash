@@ -4,7 +4,9 @@
  * Lets a trusted plugin shape how a `blocks` field (sections) and the repeater items inside
  * it behave: which cards start collapsed and hearing about changes, header actions next to
  * "Add block", a rewrite of a collapsed card's one-line summary, whether repeater items
- * inside a block start collapsed, and moving the "Version N" badge from the title to a footer. With no plugin exporting the slot, every function here
+ * inside a block start collapsed, and moving the "Version N" badge from the title to a footer,
+ * and per-card slots (actions beside duplicate and delete, a panel under the header that shows
+ * even when the card is collapsed, badges by the title). With no plugin exporting the slot, every function here
  * returns its input untouched and nothing is rendered, so the editor is EmDash's own.
  *
  * When several plugins export the slot, their contributions combine like this:
@@ -14,6 +16,7 @@
  * - `headerActions`: every plugin's component renders, in plugin order.
  * - `useSummaryRewriter`: rewrites chain; each plugin receives the previous one's output.
  * - `hideVersionBadge`: hidden if any plugin asks. `cardFooter`: every plugin's footer renders.
+ * - `cardActions`, `cardPanel`, `cardBadges`: every plugin's component renders, in plugin order.
  *
  * emdash-suite hook: blocks-field
  */
@@ -44,6 +47,18 @@ export interface BlocksFieldControls {
 	expandAll: () => void;
 }
 
+/** What the per-card slots (`cardActions`, `cardPanel`, `cardBadges`) receive. */
+export interface BlocksFieldCardSlot {
+	fieldPath: string;
+	blockKey: string;
+	blockType: string;
+	/** The block's stored value (its fields, plus `_key`, `_type` and `_version`). */
+	block: Readonly<Record<string, unknown>>;
+	/** Sets one field of the block. */
+	onChange: (name: string, value: unknown) => void;
+	readOnly: boolean;
+}
+
 export interface BlocksFieldExtension {
 	/** Whether a card starts collapsed. Return `undefined` to leave it to the next plugin. */
 	initialCollapsed?: (card: BlocksFieldCard) => boolean | undefined;
@@ -64,6 +79,12 @@ export interface BlocksFieldExtension {
 		blockType: string;
 		version: number;
 	}>;
+	/** Rendered in a card's header, beside duplicate and delete. */
+	cardActions?: React.ComponentType<BlocksFieldCardSlot>;
+	/** Rendered under a card's header, collapsed or not. */
+	cardPanel?: React.ComponentType<BlocksFieldCardSlot>;
+	/** Rendered next to a card's title. */
+	cardBadges?: React.ComponentType<BlocksFieldCardSlot>;
 }
 
 function useExtensions(): readonly BlocksFieldExtension[] {
@@ -189,6 +210,40 @@ export function useBlockCard(
 					})}
 				</>
 			),
+	};
+}
+
+/** Called by BlockCard: the plugins' per-card slots (all null with no plugin). */
+export function useBlockCardSlots(
+	block: { _key: string; _type: string },
+	fieldPath: string,
+	onChange: (name: string, value: unknown) => void,
+	readOnly: boolean,
+): { actions: React.ReactNode; panel: React.ReactNode; badges: React.ReactNode } {
+	const extensions = useExtensions();
+	const render = (pick: (e: BlocksFieldExtension) => React.ComponentType<BlocksFieldCardSlot> | undefined) => {
+		const parts = extensions.flatMap((extension, index) => {
+			const Slot = pick(extension);
+			if (!Slot) return [];
+			return [
+				<PluginFieldErrorBoundary key={index} fieldKind="blocks">
+					<Slot
+						fieldPath={fieldPath}
+						blockKey={block._key}
+						blockType={block._type}
+						block={block}
+						onChange={onChange}
+						readOnly={readOnly}
+					/>
+				</PluginFieldErrorBoundary>,
+			];
+		});
+		return parts.length === 0 ? null : <>{parts}</>;
+	};
+	return {
+		actions: render((e) => e.cardActions),
+		panel: render((e) => e.cardPanel),
+		badges: render((e) => e.cardBadges),
 	};
 }
 

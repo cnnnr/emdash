@@ -31,6 +31,7 @@ import {
 } from "../lib/block-field-state.js";
 import { useBlockRenderField, useBlocksField, useSummaryBlock } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
 import { useBlockCard } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
+import { useBlockCardSlots } from "../lib/blocks-field.js"; // emdash-suite hook: blocks-field
 import { cn } from "../lib/utils.js";
 import { useSectionFieldRenderer } from "./NestedFieldEditor.js"; // emdash-suite hook: nested-field-editors
 
@@ -328,6 +329,7 @@ function BlockCard({
 	const blockSummary = version ? summary(block, version.fields) : null;
 	block = realBlock; // emdash-suite hook: blocks-field
 	const blocksCard = useBlockCard(block, fieldPath); // emdash-suite hook: blocks-field
+	const cardSlots = useBlockCardSlots(block, fieldPath, onChange, readOnly); // emdash-suite hook: blocks-field
 	renderField = useSectionFieldRenderer(renderField, block._type, version?.fields, readOnly); // emdash-suite hook: nested-field-editors
 	renderField = useBlockRenderField(renderField, block._type); // emdash-suite hook: blocks-field
 
@@ -376,6 +378,7 @@ function BlockCard({
 						{inactive && <Badge variant="secondary">{t`Inactive version`}</Badge>}
 						{retired && <Badge variant="secondary">{t`Retired`}</Badge>}
 						{unsupported && <Badge variant="secondary">{t`Unsupported`}</Badge>}
+						{cardSlots.badges /* emdash-suite hook: blocks-field */}
 					</div>
 					{blockSummary && (
 						<p dir="auto" className="w-fit max-w-full truncate text-xs text-kumo-subtle">
@@ -383,6 +386,7 @@ function BlockCard({
 						</p>
 					)}
 				</div>
+				{cardSlots.actions /* emdash-suite hook: blocks-field */}
 				{!readOnly && (
 					<div className="flex items-center gap-1">
 						<Button
@@ -408,6 +412,7 @@ function BlockCard({
 				)}
 			</div>
 
+			{cardSlots.panel /* emdash-suite hook: blocks-field */}
 			{!collapsed && (
 				<div className="space-y-4 border-t border-kumo-line p-4">
 					{unsupported ? (
