@@ -10,6 +10,10 @@ export * from "./components";
 // API client
 export * from "./lib/api";
 
+// The code editor (CodeMirror, loaded on first use) for plugins. emdash-suite hook: code-editor
+export { EmbedCodeEditor } from "./components/editor/EmbedBlockShell"; // emdash-suite hook: code-editor
+export type { CodeEditorProps, CodeEditorLanguage } from "./components/editor/CodeEditor"; // emdash-suite hook: code-editor
+
 // Utilities
 export { cn } from "./lib/utils";
 
