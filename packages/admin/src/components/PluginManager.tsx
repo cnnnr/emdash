@@ -65,6 +65,7 @@ import {
 	requiredSwitchProps,
 	useRequiredPlugin,
 } from "../lib/required-plugin.js"; // emdash-suite hook: required-plugin
+import { PluginListLayoutSlot, usePluginCardHidden } from "../lib/plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
 import { safeIconUrl } from "../lib/url.js";
 import { cn, formatDate } from "../lib/utils.js";
 import { ADMIN_NAV_ICONS } from "./admin-navigation-icons.js";
@@ -239,6 +240,20 @@ export function PluginManager({ manifest }: PluginManagerProps) {
 						isToggling={enableMutation.isPending || disableMutation.isPending}
 					/>
 				))}
+				{/* emdash-suite hook: plugin-list-layout */}
+				<PluginListLayoutSlot
+					plugins={plugins ?? []}
+					renderCard={(plugin) => (
+						<PluginCard
+							key={plugin.id}
+							plugin={plugin}
+							updateInfo={updateMap.get(plugin.id)}
+							onEnable={() => enableMutation.mutate(plugin.id)}
+							onDisable={() => disableMutation.mutate(plugin.id)}
+							isToggling={enableMutation.isPending || disableMutation.isPending}
+						/>
+					)}
+				/>
 			</div>
 
 			{plugins?.length === 0 && (
@@ -420,6 +435,8 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 
 	const required = useRequiredPlugin(plugin.id); // emdash-suite hook: required-plugin
 
+	const hiddenByLayout = usePluginCardHidden(); // emdash-suite hook: plugin-list-layout
+
 	const handleToggle = () => {
 		if (plugin.enabled) {
 			onDisable();
@@ -427,6 +444,8 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 			onEnable();
 		}
 	};
+
+	if (hiddenByLayout) return null; // emdash-suite hook: plugin-list-layout
 
 	return (
 		<>
@@ -436,6 +455,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 					!plugin.enabled && "opacity-75",
 					registryIdentity?.status === "invalid" && "border-kumo-danger",
 				)}
+				data-plugin-row={plugin.id} // emdash-suite hook: plugin-list-layout
 			>
 				<div className="flex items-center gap-4 p-4">
 					{/* Plugin icon */}

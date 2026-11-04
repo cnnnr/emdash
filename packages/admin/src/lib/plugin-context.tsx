@@ -17,6 +17,7 @@ import type { ContentListColumnExtension } from "./content-list-columns.js";
 import type { DashboardWidgetExtension } from "./dashboard-widgets.js"; // emdash-suite hook: dashboard-widgets
 import type { FieldWrapperExtension } from "./field-wrapper.js"; // emdash-suite hook: field-wrapper
 import type { GeneralSettingsFieldsExtension } from "./general-settings-fields.js"; // emdash-suite hook: general-settings-fields
+import type { PluginListLayoutExtension } from "./plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
 import type { SidebarLayoutExtension } from "./sidebar-layout.js"; // emdash-suite hook: sidebar-layout
 
@@ -44,6 +45,8 @@ export interface PluginAdminModule {
 	fieldWrappers?: readonly FieldWrapperExtension[];
 	/** Shapes dashboard cards by widget id: role, size, title bar actions. emdash-suite hook: dashboard-widgets */
 	dashboardWidgets?: Readonly<Record<string, DashboardWidgetExtension>>;
+	/** Draws the Plugin Manager's list. emdash-suite hook: plugin-list-layout */
+	pluginListLayout?: PluginListLayoutExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */
