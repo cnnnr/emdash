@@ -65,7 +65,7 @@ import {
 	requiredSwitchProps,
 	useRequiredPlugin,
 } from "../lib/required-plugin.js"; // emdash-suite hook: required-plugin
-import { PluginListLayoutSlot, usePluginCardHidden } from "../lib/plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
+import { PluginListLayoutSlot } from "../lib/plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
 import { safeIconUrl } from "../lib/url.js";
 import { cn, formatDate } from "../lib/utils.js";
 import { ADMIN_NAV_ICONS } from "./admin-navigation-icons.js";
@@ -230,6 +230,7 @@ export function PluginManager({ manifest }: PluginManagerProps) {
 			</div>
 
 			<div className="grid gap-4">
+			<PluginListLayoutSlot plugins={plugins ?? []} /* emdash-suite hook: plugin-list-layout */>
 				{plugins?.map((plugin) => (
 					<PluginCard
 						key={plugin.id}
@@ -240,20 +241,7 @@ export function PluginManager({ manifest }: PluginManagerProps) {
 						isToggling={enableMutation.isPending || disableMutation.isPending}
 					/>
 				))}
-				{/* emdash-suite hook: plugin-list-layout */}
-				<PluginListLayoutSlot
-					plugins={plugins ?? []}
-					renderCard={(plugin) => (
-						<PluginCard
-							key={plugin.id}
-							plugin={plugin}
-							updateInfo={updateMap.get(plugin.id)}
-							onEnable={() => enableMutation.mutate(plugin.id)}
-							onDisable={() => disableMutation.mutate(plugin.id)}
-							isToggling={enableMutation.isPending || disableMutation.isPending}
-						/>
-					)}
-				/>
+			</PluginListLayoutSlot>
 			</div>
 
 			{plugins?.length === 0 && (
@@ -435,8 +423,6 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 
 	const required = useRequiredPlugin(plugin.id); // emdash-suite hook: required-plugin
 
-	const hiddenByLayout = usePluginCardHidden(); // emdash-suite hook: plugin-list-layout
-
 	const handleToggle = () => {
 		if (plugin.enabled) {
 			onDisable();
@@ -444,8 +430,6 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 			onEnable();
 		}
 	};
-
-	if (hiddenByLayout) return null; // emdash-suite hook: plugin-list-layout
 
 	return (
 		<>
@@ -457,7 +441,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 				)}
 				data-plugin-row={plugin.id} // emdash-suite hook: plugin-list-layout
 			>
-				<div className="flex items-center gap-4 p-4">
+				<div className="flex items-center gap-4 p-4" data-plugin-summary /* emdash-suite hook: plugin-list-layout */>
 					{/* Plugin icon */}
 					{plugin.iconUrl ? (
 						<img
@@ -508,7 +492,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 						)}
 
 						{/* Feature indicators + inline capabilities */}
-						<div className="flex items-center gap-3 mt-1 text-sm text-kumo-subtle">
+						<div className="flex items-center gap-3 mt-1 text-sm text-kumo-subtle" data-plugin-features /* emdash-suite hook: plugin-list-layout */>
 							{plugin.hasAdminPages && (
 								<span className="flex items-center gap-1">
 									<FileText className="h-3 w-3" />
@@ -554,7 +538,7 @@ function PluginCard({ plugin, updateInfo, onEnable, onDisable, isToggling }: Plu
 					</div>
 
 					{/* Actions */}
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2" data-plugin-actions /* emdash-suite hook: plugin-list-layout */>
 						{hasUpdate && (
 							<Button
 								variant="outline"

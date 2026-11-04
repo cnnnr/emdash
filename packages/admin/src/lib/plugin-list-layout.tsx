@@ -1,19 +1,21 @@
 /**
  * Plugin list layout hook: the `pluginListLayout` slot on PluginAdminModule.
  *
- * A plugin that exports `pluginListLayout` draws the Plugin Manager's list of plugins itself. It gets
- * the plugins and `renderCard(plugin)`, which draws EmDash's own card for one (switch, settings,
- * details and dialogs all work as usual), so it can group, order and style the cards. The cards carry
- * a stable `data-plugin-row` attribute (the plugin id) to style them from.
+ * A plugin that exports `pluginListLayout` draws the Plugin Manager's list itself. It gets the
+ * plugins and `renderCard(plugin)`, which returns EmDash's own card for one (switch, settings,
+ * details and dialogs all work as usual), so it can group, order and style the cards. The cards
+ * carry stable markers to style them from: `data-plugin-row` (the plugin id) on the card,
+ * `data-plugin-summary` on its top row, `data-plugin-features` on the feature icons and
+ * `data-plugin-actions` on its buttons and switch.
  *
- * With no enabled plugin exporting the slot, the Plugin Manager is EmDash's own.
+ * With no enabled plugin exporting the slot, the children (EmDash's own cards) render as they are.
+ * If the layout throws, EmDash's own cards render instead.
  *
  * emdash-suite hook: plugin-list-layout
  */
 
 import * as React from "react";
 
-import { PluginFieldErrorBoundary } from "../components/PluginFieldErrorBoundary.js";
 import type { PluginInfo } from "./api/plugins.js";
 import { useEnabledPluginAdmins } from "./enabled-plugin-admins.js";
 
@@ -25,30 +27,41 @@ export interface PluginListLayoutProps {
 
 export type PluginListLayoutExtension = React.ComponentType<PluginListLayoutProps>;
 
-/** True inside the plugin's layout, where cards draw. */
-const InsideLayout = React.createContext(false);
-
-function usePluginListLayout(): PluginListLayoutExtension | null {
-	for (const admin of Object.values(useEnabledPluginAdmins())) {
-		if (admin.pluginListLayout) return admin.pluginListLayout;
+/** Shows `fallback` when what it wraps throws while rendering. */
+class LayoutBoundary extends React.Component<
+	{ fallback: React.ReactNode; children: React.ReactNode },
+	{ failed: boolean }
+> {
+	override state = { failed: false };
+	static getDerivedStateFromError() {
+		return { failed: true };
 	}
-	return null;
+	override render() {
+		return this.state.failed ? this.props.fallback : this.props.children;
+	}
 }
 
-/** Draws the plugin's layout, or nothing while no enabled plugin has one. */
-export function PluginListLayoutSlot(props: PluginListLayoutProps) {
-	const Layout = usePluginListLayout();
-	if (!Layout) return null;
+/** Wraps EmDash's own cards; hands them to the plugin's layout when an enabled plugin has one. */
+export function PluginListLayoutSlot({
+	plugins,
+	children,
+}: {
+	plugins: readonly PluginInfo[];
+	children: React.ReactNode;
+}) {
+	const admins = useEnabledPluginAdmins();
+	const Layout = Object.values(admins).find((admin) => admin.pluginListLayout)?.pluginListLayout;
+	if (!Layout) return <>{children}</>;
+	const cards = new Map<string, React.ReactNode>();
+	for (const card of React.Children.toArray(children)) {
+		const id = React.isValidElement<{ plugin?: PluginInfo }>(card)
+			? card.props.plugin?.id
+			: undefined;
+		if (id) cards.set(id, card);
+	}
 	return (
-		<InsideLayout.Provider value>
-			<PluginFieldErrorBoundary fieldKind="plugin list">
-				<Layout {...props} />
-			</PluginFieldErrorBoundary>
-		</InsideLayout.Provider>
+		<LayoutBoundary fallback={children}>
+			<Layout plugins={plugins} renderCard={(plugin) => cards.get(plugin.id)} />
+		</LayoutBoundary>
 	);
-}
-
-/** True for EmDash's own list while a plugin's layout draws the cards instead. */
-export function usePluginCardHidden(): boolean {
-	return usePluginListLayout() !== null && !React.useContext(InsideLayout);
 }
