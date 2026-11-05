@@ -19,6 +19,7 @@ import type { FieldWrapperExtension } from "./field-wrapper.js"; // emdash-suite
 import type { GeneralSettingsFieldsExtension } from "./general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import type { PluginListLayoutExtension } from "./plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
+import type { SidebarFooterExtension } from "./sidebar-footer.js"; // emdash-suite hook: sidebar-footer
 import type { SidebarLayoutExtension } from "./sidebar-layout.js"; // emdash-suite hook: sidebar-layout
 
 /** Shape of a plugin's admin exports */
@@ -47,6 +48,8 @@ export interface PluginAdminModule {
 	dashboardWidgets?: Readonly<Record<string, DashboardWidgetExtension>>;
 	/** Draws the Plugin Manager's list. emdash-suite hook: plugin-list-layout */
 	pluginListLayout?: PluginListLayoutExtension;
+	/** Draws a component at the bottom of the sidebar, above the footer. emdash-suite hook: sidebar-footer */
+	sidebarFooter?: SidebarFooterExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */

@@ -32,6 +32,7 @@ import {
 	toPhosphorIconName,
 } from "./admin-navigation-icons.js";
 import { BrandIcon } from "./Logo.js";
+import { SidebarFooterSlot } from "../lib/sidebar-footer.js"; // emdash-suite hook: sidebar-footer
 import { SidebarLayoutContent } from "./SidebarLayout.js"; // emdash-suite hook: sidebar-layout
 
 // Re-export for Shell.tsx and Header.tsx
@@ -733,6 +734,8 @@ export function SidebarNav({ manifest }: SidebarNavProps) {
 				)}
 			</SidebarLayoutContent>
 
+			{/* emdash-suite hook: sidebar-footer */}
+			<SidebarFooterSlot />
 			<KumoSidebar.Footer className="gap-0">
 				<KumoSidebar.Trigger className="rtl:rotate-180" />
 				<div className="min-w-0 flex-1 overflow-hidden">
