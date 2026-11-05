@@ -158,6 +158,7 @@ import { runBulkAction } from "./lib/bulk";
 import { parseCalendarSearch } from "./lib/calendar";
 import { canDuplicateEntry, canPublishEntry, entryEditAccess } from "./lib/content-permissions";
 import { describeContentValidationError } from "./lib/content-validation-errors";
+import { usePluginAvailable } from "./lib/enabled-plugin-admins"; // emdash-suite hook: enabled-plugin-admins
 import { usePluginPage } from "./lib/plugin-context";
 import { getPluginBlocks } from "./lib/pluginBlocks";
 import { withAutosavedDraft } from "./lib/revision-list-cache.js";
@@ -3233,6 +3234,9 @@ function PluginPage() {
 	const { pluginId } = useParams({ from: "/_admin/plugins/$pluginId/$" });
 	const { _splat } = useParams({ from: "/_admin/plugins/$pluginId/$" });
 	const pagePath = "/" + (_splat || "");
+	const available = usePluginAvailable(pluginId); // emdash-suite hook: enabled-plugin-admins
+
+	if (!available) return <NotFoundPage />; // emdash-suite hook: enabled-plugin-admins
 
 	// Get plugin page component from context (trusted plugins with React)
 	const PluginComponent = usePluginPage(pluginId, pagePath);

@@ -52,7 +52,7 @@ import { getEntryTitle } from "../lib/entryTitle.js";
 import { getFieldLabel } from "../lib/field-label.js";
 import { formatFileSize, getFileIcon, localMediaFileUrl } from "../lib/media-utils";
 import { useFieldWrappers, wrapField } from "../lib/field-wrapper.js"; // emdash-suite hook: field-wrapper
-import { usePluginAdmins } from "../lib/plugin-context.js";
+import { useEnabledPluginAdmins } from "../lib/enabled-plugin-admins.js"; // emdash-suite hook: enabled-plugin-admins
 import {
 	resolveSandboxedEditorActions,
 	selectEditorDraftFields,
@@ -2400,7 +2400,7 @@ function FieldRenderer({
 	onArrowUpAtStart,
 }: FieldRendererProps) {
 	const { t } = useLingui();
-	const pluginAdmins = usePluginAdmins();
+	const pluginAdmins = useEnabledPluginAdmins(); // emdash-suite hook: enabled-plugin-admins
 	const label = getFieldLabel(name, field);
 	const id = `field-${name}`;
 	const labelClass = minimal ? "text-kumo-subtle/50 text-xs font-normal" : undefined;

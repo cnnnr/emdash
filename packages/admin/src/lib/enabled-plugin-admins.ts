@@ -6,6 +6,10 @@
  * the router already loads), so a disabled plugin's hooks stop too. Until the manifest has loaded nothing
  * is filtered, as in EmDash's own slots.
  *
+ * `usePluginAvailable(pluginId)` is the same rule for one plugin: false once the manifest has loaded and doesn't
+ * list the plugin as enabled (the plugin's own page and field widgets resolve from the admin modules, not the
+ * manifest, so they ask this). A server can leave a plugin out of the manifest for a user, so it doesn't exist for them.
+ *
  * emdash-suite hook: enabled-plugin-admins
  */
 
@@ -37,4 +41,16 @@ export function useEnabledPluginAdmins(): PluginAdmins {
 		() => filterEnabledPluginAdmins(admins, manifest?.plugins),
 		[admins, manifest?.plugins],
 	);
+}
+
+/** Whether `pluginId` exists for this user: listed as enabled by the manifest, or the manifest hasn't loaded yet. */
+export function isPluginAvailable(plugins: AdminManifest["plugins"] | undefined, pluginId: string): boolean {
+	if (!plugins) return true;
+	const state = plugins[pluginId];
+	return state !== undefined && state.enabled !== false;
+}
+
+export function usePluginAvailable(pluginId: string): boolean {
+	const { data: manifest } = useQuery({ queryKey: ["manifest"], queryFn: fetchManifest });
+	return isPluginAvailable(manifest?.plugins, pluginId);
 }

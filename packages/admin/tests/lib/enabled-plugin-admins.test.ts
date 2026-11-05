@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { filterEnabledPluginAdmins } from "../../src/lib/enabled-plugin-admins";
+import { filterEnabledPluginAdmins, isPluginAvailable } from "../../src/lib/enabled-plugin-admins";
 import type { PluginAdmins } from "../../src/lib/plugin-context";
 
 const admins = { on: { nestedFieldEditors: [] }, off: { nestedFieldEditors: [] }, unknown: {} } as unknown as PluginAdmins;
@@ -18,5 +18,18 @@ describe("filterEnabledPluginAdmins", () => {
 
 	it("filters nothing until the manifest has loaded", () => {
 		expect(filterEnabledPluginAdmins(admins, undefined)).toBe(admins);
+	});
+});
+
+describe("isPluginAvailable", () => {
+	it("is false for a plugin the manifest leaves out or disables, true for one it lists", () => {
+		expect(isPluginAvailable({ on: { enabled: true }, off: { enabled: false } }, "on")).toBe(true);
+		expect(isPluginAvailable({ on: {} }, "on")).toBe(true);
+		expect(isPluginAvailable({ off: { enabled: false } }, "off")).toBe(false);
+		expect(isPluginAvailable({}, "gone")).toBe(false);
+	});
+
+	it("is true until the manifest has loaded", () => {
+		expect(isPluginAvailable(undefined, "any")).toBe(true);
 	});
 });
