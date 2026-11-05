@@ -6,6 +6,7 @@ import * as React from "react";
 import type { UserListItem } from "../../lib/api";
 import { cn, formatDate } from "../../lib/utils.js";
 import { TableToolbar, TableToolbarSearch } from "../TableToolbar.js";
+import { UserActionsCell, UserActionsHead } from "../../lib/user-actions.js"; // emdash-suite hook: user-actions
 import { RoleBadge } from "./RoleBadge";
 import { useRolesConfig } from "./useRolesConfig.js";
 
@@ -102,6 +103,8 @@ export function UserList({
 							<th scope="col" className="px-4 py-3 text-start text-sm font-medium">
 								{t`Passkeys`}
 							</th>
+							{/* emdash-suite hook: user-actions */}
+							<UserActionsHead />
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-kumo-line">
@@ -223,6 +226,8 @@ function UserListRow({ user, onSelect }: UserListRowProps) {
 					{user.credentialCount}
 				</span>
 			</td>
+			{/* emdash-suite hook: user-actions */}
+			<UserActionsCell user={user} />
 		</tr>
 	);
 }

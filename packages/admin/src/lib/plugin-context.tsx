@@ -21,6 +21,7 @@ import type { PluginListLayoutExtension } from "./plugin-list-layout.js"; // emd
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
 import type { SidebarFooterExtension } from "./sidebar-footer.js"; // emdash-suite hook: sidebar-footer
 import type { SidebarLayoutExtension } from "./sidebar-layout.js"; // emdash-suite hook: sidebar-layout
+import type { UserActionsExtension } from "./user-actions.js"; // emdash-suite hook: user-actions
 
 /** Shape of a plugin's admin exports */
 export interface PluginAdminModule {
@@ -50,6 +51,8 @@ export interface PluginAdminModule {
 	pluginListLayout?: PluginListLayoutExtension;
 	/** Draws a component at the bottom of the sidebar, above the footer. emdash-suite hook: sidebar-footer */
 	sidebarFooter?: SidebarFooterExtension;
+	/** Draws an action per user in the Users list and the user dialog. emdash-suite hook: user-actions */
+	userActions?: UserActionsExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */

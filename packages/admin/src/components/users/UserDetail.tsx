@@ -15,6 +15,7 @@ import * as React from "react";
 import type { UserDetail as UserDetailType, UpdateUserInput } from "../../lib/api";
 import { useStableCallback } from "../../lib/hooks";
 import { cn, formatDate, isolate } from "../../lib/utils.js";
+import { UserActionsDialog } from "../../lib/user-actions.js"; // emdash-suite hook: user-actions
 import { useRolesConfig } from "./useRolesConfig.js";
 
 export interface UserDetailProps {
@@ -329,6 +330,8 @@ export function UserDetail({
 								>
 									{isSaving ? t`Saving...` : t`Save Changes`}
 								</Button>
+								{/* emdash-suite hook: user-actions */}
+								{!isSelf && <UserActionsDialog user={user} />}
 								{!isSelf && (
 									<Button
 										variant={user.disabled ? "outline" : "destructive"}
