@@ -17,7 +17,7 @@ import {
 	type EmailSettings as EmailSettingsData,
 } from "../../lib/api/email-settings.js";
 import { getMutationError } from "../DialogError.js";
-import { EmailSettingsActions, EmailSettingsSections } from "../../lib/email-settings.js"; // emdash-suite hook: email-settings
+import { EmailSettingsActions, EmailSettingsSections, EmailSettingsStatus } from "../../lib/email-settings.js"; // emdash-suite hook: email-settings
 import { SettingRow, SettingsFrame, SettingsSection } from "./SettingsLayout.js";
 
 export function EmailSettings() {
@@ -89,6 +89,7 @@ export function EmailSettings() {
 	return (
 		<SettingsFrame title={title} description={description} actions={<EmailSettingsActions />}> {/* emdash-suite hook: email-settings */}
 			<div className="grid gap-8">
+				<EmailSettingsStatus /> {/* emdash-suite hook: email-settings */}
 				<SettingsSection title={t`Email Pipeline`}>
 					<PipelineStatus settings={settings} />
 				</SettingsSection>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { describe, expect, it } from "vitest";
 
-import { EmailSettingsActions, EmailSettingsSections } from "../../src/lib/email-settings.js";
+import { EmailSettingsActions, EmailSettingsSections, EmailSettingsStatus } from "../../src/lib/email-settings.js";
 import { PluginAdminProvider } from "../../src/lib/plugin-context.js";
 import { render } from "../utils/render.tsx";
 
@@ -10,6 +10,7 @@ function Probe() {
 		<>
 			<EmailSettingsSections />
 			<EmailSettingsActions />
+			<EmailSettingsStatus />
 		</>
 	);
 }
@@ -28,7 +29,7 @@ describe("email settings hook", () => {
 		const screen = await render(
 			<PluginAdminProvider
 				pluginAdmins={{
-					p: { emailSettings: { sections: () => <p>Provider</p>, actions: () => <button>Sent Log</button> } },
+					p: { emailSettings: { sections: () => <p>Provider</p>, actions: () => <button>Sent Log</button>, status: () => <p>Email Active</p> } },
 				}}
 			>
 				<Probe />
@@ -36,5 +37,7 @@ describe("email settings hook", () => {
 		);
 		await expect.element(screen.getByText("Provider")).toBeInTheDocument();
 		await expect.element(screen.getByRole("button", { name: "Sent Log" })).toBeInTheDocument();
+		await expect.element(screen.getByText("Email Active")).toBeInTheDocument();
+		expect(screen.container.querySelector("style")?.textContent).toContain("emdash-email-status");
 	});
 });

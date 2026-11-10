@@ -1,8 +1,8 @@
 /**
  * Email settings hook: the `emailSettings` slot on PluginAdminModule.
  *
- * A plugin adds sections below EmDash's own on Settings > Email (`sections`) and buttons to the page
- * header (`actions`). With no plugin using the slot the page is EmDash's own.
+ * A plugin adds sections below EmDash's own on Settings > Email (`sections`), buttons to the page
+ * header (`actions`), and can replace EmDash's "Email Pipeline" status card with its own (`status`). With no plugin using the slot the page is EmDash's own.
  *
  * emdash-suite hook: email-settings
  */
@@ -18,6 +18,8 @@ export interface EmailSettingsExtension {
 	sections?: React.ComponentType;
 	/** Drawn in the page header, beside the title. */
 	actions?: React.ComponentType;
+	/** Drawn first, and EmDash's own status card is hidden: for a provider whose real state EmDash can't see. */
+	status?: React.ComponentType;
 }
 
 function useExtensions(): [string, EmailSettingsExtension][] {
@@ -52,5 +54,22 @@ export function EmailSettingsActions() {
 				</PluginFieldErrorBoundary>
 			))}
 		</div>
+	);
+}
+
+/** The first plugin's status section, with EmDash's own status card hidden; nothing when no plugin has one. */
+export function EmailSettingsStatus() {
+	const found = useExtensions().find(([, extension]) => extension.status);
+	if (!found) return null;
+	const [id, { status: Status }] = found;
+	return (
+		<>
+			<style>{".emdash-email-status + section { display: none; }"}</style>
+			<div className="emdash-email-status">
+				<PluginFieldErrorBoundary key={id} fieldKind="email settings">
+					{Status ? <Status /> : null}
+				</PluginFieldErrorBoundary>
+			</div>
+		</>
 	);
 }
