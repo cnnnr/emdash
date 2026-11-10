@@ -16,6 +16,7 @@ import type { ContentEditorPanelExtension } from "./content-editor-panels";
 import type { ContentListColumnExtension } from "./content-list-columns.js";
 import type { DashboardWidgetExtension } from "./dashboard-widgets.js"; // emdash-suite hook: dashboard-widgets
 import type { FieldWrapperExtension } from "./field-wrapper.js"; // emdash-suite hook: field-wrapper
+import type { EmailSettingsExtension } from "./email-settings.js"; // emdash-suite hook: email-settings
 import type { GeneralSettingsFieldsExtension } from "./general-settings-fields.js"; // emdash-suite hook: general-settings-fields
 import type { PluginListLayoutExtension } from "./plugin-list-layout.js"; // emdash-suite hook: plugin-list-layout
 import type { RequiredPluginExtension } from "./required-plugin.js"; // emdash-suite hook: required-plugin
@@ -53,6 +54,8 @@ export interface PluginAdminModule {
 	sidebarFooter?: SidebarFooterExtension;
 	/** Draws an action per user in the Users list and the user dialog. emdash-suite hook: user-actions */
 	userActions?: UserActionsExtension;
+	/** Adds sections and header actions to Settings > Email. emdash-suite hook: email-settings */
+	emailSettings?: EmailSettingsExtension;
 }
 
 /** All plugin admin modules keyed by plugin ID */
